@@ -216,16 +216,36 @@ function appointment_calendar_shortcode() {
                 timeFormat: 'h:mm{-h:mmtt }',
                 axisFormat: 'h:mm{-h:mmtt }',
     <?php $AllCalendarSettings = unserialize(get_option('apcal_calendar_settings')); ?>
-        firstDay: <?php if ($AllCalendarSettings['calendar_start_day'] != '') echo $AllCalendarSettings['calendar_start_day'];
-    else echo "1"; ?>,
-                slotMinutes: <?php if ($AllCalendarSettings['calendar_slot_time'] != '') echo $AllCalendarSettings['calendar_slot_time'];
-    else echo "15"; ?>,
-                defaultView: '<?php if ($AllCalendarSettings['calendar_view'] != '') echo $AllCalendarSettings['calendar_view'];
-    else echo "month"; ?>',
-                minTime: <?php if ($AllCalendarSettings['day_start_time'] != '') echo date("G", strtotime($AllCalendarSettings['day_start_time']));
-    else echo "8"; ?>,
-                maxTime: <?php if ($AllCalendarSettings['day_end_time'] != '') echo date("G", strtotime($AllCalendarSettings['day_end_time']));
-    else echo "20"; ?>,
+        firstDay: <?php
+    if ($AllCalendarSettings['calendar_start_day'] != '')
+        echo $AllCalendarSettings['calendar_start_day'];
+    else
+        echo "1";
+    ?>,
+                slotMinutes: <?php
+    if ($AllCalendarSettings['calendar_slot_time'] != '')
+        echo $AllCalendarSettings['calendar_slot_time'];
+    else
+        echo "15";
+    ?>,
+                defaultView: '<?php
+    if ($AllCalendarSettings['calendar_view'] != '')
+        echo $AllCalendarSettings['calendar_view'];
+    else
+        echo "month";
+    ?>',
+                minTime: <?php
+    if ($AllCalendarSettings['day_start_time'] != '')
+        echo date("G", strtotime($AllCalendarSettings['day_start_time']));
+    else
+        echo "8";
+    ?>,
+                maxTime: <?php
+    if ($AllCalendarSettings['day_end_time'] != '')
+        echo date("G", strtotime($AllCalendarSettings['day_end_time']));
+    else
+        echo "20";
+    ?>,
                 monthNames: ["<?php _e("Ianuarie", "appointzilla"); ?>", "<?php _e("Februarie", "appointzilla"); ?>", "<?php _e("Martie", "appointzilla"); ?>", "<?php _e("Aprilie", "appointzilla"); ?>", "<?php _e("Mai", "appointzilla"); ?>", "<?php _e("Iunie", "appointzilla"); ?>", "<?php _e("Iulie", "appointzilla"); ?>", "<?php _e("August", "appointzilla"); ?>", "<?php _e("Septembrie", "appointzilla"); ?>", "<?php _e("Octombrie", "appointzilla"); ?>", "<?php _e("Noiembrie", "appointzilla"); ?>", "<?php _e("Decembrie", "appointzilla"); ?>" ],
                 monthNamesShort: ["<?php _e("Ian", "appointzilla"); ?>", "<?php _e("Feb", "appointzilla"); ?>", "<?php _e("Mar", "appointzilla"); ?>", "<?php _e("Apr", "appointzilla"); ?>", "<?php _e("Mai", "appointzilla"); ?>", "<?php _e("Iun", "appointzilla"); ?>", "<?php _e("Iul", "appointzilla"); ?>", "<?php _e("Aug", "appointzilla"); ?>", "<?php _e("Sept", "appointzilla"); ?>", "<?php _e("Oct", "appointzilla"); ?>", "<?php _e("Nov", "appointzilla"); ?>", "<?php _e("Dec", "appointzilla"); ?>"],
                 dayNames: ["<?php _e("Duminica", "appointzilla"); ?>", "<?php _e("Luni", "appointzilla"); ?>", "<?php _e("Marti", "appointzilla"); ?>", "<?php _e("Miercuri", "appointzilla"); ?>", "<?php _e("Joi", "appointzilla"); ?>", "<?php _e("Vineri", "appointzilla"); ?>", "<?php _e("Sambata", "appointzilla"); ?>"],
@@ -243,7 +263,7 @@ function appointment_calendar_shortcode() {
                 },
                 events: [
     <?php
-    //Loading Appointments On Calendar Start
+//Loading Appointments On Calendar Start
     global $wpdb;
     $AppointmentTableName = $wpdb->prefix . "ap_appointments";
     $AllAppointments = $wpdb->get_results($wpdb->prepare("select name, start_time, end_time, date FROM $AppointmentTableName where id > %d", null), OBJECT);
@@ -274,7 +294,7 @@ function appointment_calendar_shortcode() {
     }
 
 
-    // Loading Events On Calendar Start
+// Loading Events On Calendar Start
     global $wpdb;
     $EventTableName = $wpdb->prefix . "ap_events";
     $AllEvents = $wpdb->get_results($wpdb->prepare("select `name`, `start_time`, `end_time`, `start_date`, `end_date`, `repeat` FROM `$EventTableName` where `repeat` = %s", 'N'), OBJECT);
@@ -315,10 +335,10 @@ function appointment_calendar_shortcode() {
         }
     }
 
-    //Loading Recurring Events On Calendar Start
+//Loading Recurring Events On Calendar Start
     $AllREvents = $wpdb->get_results($wpdb->prepare("select `id`, `name`, `start_time`, `end_time`, `start_date`, `end_date`, `repeat` FROM `$EventTableName` where `repeat` != %s", 'N'), OBJECT);
 
-    //dont show event on filtering
+//dont show event on filtering
     if (isset($AllREvents)) {
         foreach ($AllREvents as $Event) {
             //convert time foramt H:i:s
@@ -402,17 +422,17 @@ function appointment_calendar_shortcode() {
                 ]
         });
         //jQuery UI date picker on modal for
-        //document.addnewappointment.appdate.value = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';  ?>', new Date());
+        //document.addnewappointment.appdate.value = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';      ?>', new Date());
         /*jQuery(function(){
          jQuery("#datepicker").datepicker({
          inline: true,
          minDate: 0,
          altField: '#alternate',
-         firstDay: <?php //if($AllCalendarSettings['calendar_start_day'] != '') echo $AllCalendarSettings['calendar_start_day']; else echo "0";   ?>,
+         firstDay: <?php //if($AllCalendarSettings['calendar_start_day'] != '') echo $AllCalendarSettings['calendar_start_day']; else echo "0";       ?>,
          //beforeShowDay: unavailable,
          onSelect: function(dateText, inst) {
          var dateAsString = dateText;
-         var seleteddate = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';  ?>', new Date(dateAsString));
+         var seleteddate = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';      ?>', new Date(dateAsString));
          var seleteddate2 = jQuery.datepicker.formatDate('dd-mm-yy', new Date(dateAsString));
          document.addnewappointment.appdate.value = seleteddate;
          },
@@ -584,21 +604,21 @@ function appointment_calendar_shortcode() {
     <!---Display Booking Instruction--->
     <?php if ($AllCalendarSettings['apcal_booking_instructions']) { ?>
         <div id="bookinginstructions" align="center">
-        <?php echo $AllCalendarSettings['apcal_booking_instructions']; ?>
+            <?php echo $AllCalendarSettings['apcal_booking_instructions']; ?>
         </div>
-        <?php } ?>
+    <?php } ?>
 
     <!---Schedule New New Appointment Button--->
     <div id="bkbtndiv" align="center" style="padding:5px;">
         <button name="addappointment" class="apcal_btn apcal_btn-primary apcal_btn-large" type="submit" id="addappointment">
             <strong></strong><i class="icon-calendar icon-white"></i>
-    <?php
-    if ($AllCalendarSettings['booking_button_text']) {
-        echo $AllCalendarSettings['booking_button_text'];
-    } else {
-        echo _e("Schedule New Appointment", "appointzilla");
-    }
-    ?>
+            <?php
+            if ($AllCalendarSettings['booking_button_text']) {
+                echo $AllCalendarSettings['booking_button_text'];
+            } else {
+                echo _e("Schedule New Appointment", "appointzilla");
+            }
+            ?>
             </strong>
         </button>
     </div>
@@ -675,10 +695,18 @@ function appointment_calendar_shortcode() {
                         <select name="service" id="service">
                             <option value="0"><?php _e("Selecteaza serviciul", "appointzilla"); ?></option>
                             <?php foreach ($AllService as $Service) { ?>
-                                <?php if ($AllCalendarSettings['show_service_cost'] == 'yes') $ShowCost = 1;
-                                else $ShowCost = 0; ?>
-                                <?php if ($AllCalendarSettings['show_service_duration'] == 'yes') $ShowDuration = 1;
-                                else $ShowDuration = 0; ?>
+                                <?php
+                                if ($AllCalendarSettings['show_service_cost'] == 'yes')
+                                    $ShowCost = 1;
+                                else
+                                    $ShowCost = 0;
+                                ?>
+                                <?php
+                                if ($AllCalendarSettings['show_service_duration'] == 'yes')
+                                    $ShowDuration = 1;
+                                else
+                                    $ShowDuration = 0;
+                                ?>
                                 <option value="<?php echo $Service->id ?>">
                                     <?php
                                     echo ucwords($Service->name);
@@ -695,49 +723,40 @@ function appointment_calendar_shortcode() {
                                         echo ")";
                                     ?>
                                 </option>
-    <?php } ?>
+                            <?php } ?>
                         </select>
                         <br>
 
-                        <html>
-                            <head>
-                                <script>
-                                    function showEmployee(str) {
-                                    if (str == "") {
-                                    document.getElementById("txtHint").innerHTML = "";
-                                    return;
-                                    } else {
-                                    if (window.XMLHttpRequest) {
-                                    // code for IE7+, Firefox, Chrome, Opera, Safari
-                                    xmlhttp = new XMLHttpRequest();
-                                    } else {
-                                    // code for IE6, IE5
-                                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-                                    }
-                                    xmlhttp.onreadystatechange = function() {
-                                    if (this.readyState == 4 && this.status == 200) {
-                                    document.getElementById("txtHint").innerHTML = this.responseText;
-                                    }
-                                    };
-                                    xmlhttp.open("GET", "salon.dev/?page_id=23?q=" + str, true);
-                                    xmlhttp.send();
-                                    }
-                                    }
-                                </script>
-                            </head>
+
+                        <script>
+                            var url = '/wp-admin/admin-ajax.php';
+                            jQuery("#service").change(function() {
+                            var idserviciu = jQuery("#service").val();
+                            jQuery.ajax({
+                            method: "GET",
+                                    ajax.url: url,
+                                    data: { action: "preluare_angajati", serviciu: idserviciu}
+
+                            })
+                                    .done(function(msg) {
+                                    alert("Data Saved: " + msg);
+                                    });
+                            });
+                        </script>
 
 
-                            <select name="employee" id="employee">
-                                <option value="0"><?php _e("Selecteaza angajatul", "appointzilla"); ?></option>
-    <?php foreach ($AllEmployees as $Employee) { ?>
-                                    <option value="<?php echo $Employee->id ?>">
-        <?php echo ucwords($Employee->name);
-        ?>
-                                    </option>
-    <?php } ?> </select>
-                            <br>
-                            <button name="next1" class="apcal_btn" type="button" id="next1" value="next1"><?php _e("Mai departe", "appointzilla"); ?> <i class="icon-arrow-right"></i></button>
-                            <div id="loading1" style="display:none;"><?php _e("Loading...", "appointzilla"); ?><img src="<?php echo plugins_url() . "/appointment-calendar/images/loading.gif"; ?>" /></div>
+
+                        <select name="employee" id="employee">
+                            <option value="0"><?php _e("Selecteaza angajatul", "appointzilla"); ?></option>
+                            <?php foreach ($AllEmployees as $Employee) { ?>
+                                <option value="<?php echo $Employee->id ?>">
+                                    <?php echo ucwords($Employee->name);
+                                    ?>
+                                </option>
+                            <?php } ?> </select>
+                        <br>
+                        <button name="next1" class="apcal_btn" type="button" id="next1" value="next1"><?php _e("Mai departe", "appointzilla"); ?> <i class="icon-arrow-right"></i></button>
+                        <div id="loading1" style="display:none;"><?php _e("Loading...", "appointzilla"); ?><img src="<?php echo plugins_url() . "/appointment-calendar/images/loading.gif"; ?>" /></div>
                     </div>
                 </div>
             </form>
@@ -749,7 +768,7 @@ function appointment_calendar_shortcode() {
         <div id="AppSecondModal">
             <div class="apcal_modal" id="myModal" style="z-index:99999;">
                 <form method="post" name="appointment-form2" id="appointment-form2" action="" onsubmit="return CheckValidation()">
-        <?php wp_nonce_field('appointment_register_nonce_check', 'appointment_register_nonce_field'); ?>
+                    <?php wp_nonce_field('appointment_register_nonce_check', 'appointment_register_nonce_field'); ?>
                     <div class="apcal_modal-info">
                         <div class="apcal_alert apcal_alert-info">
                             <a href="" style="float:right; margin-right:-4px;" id="close"><i class="icon-remove"></i></a>
@@ -1098,19 +1117,19 @@ function appointment_calendar_shortcode() {
                                             <div style="width:90px; float:left; padding:1px; display:inline-block;">
                                                 <input name="start_time" id="start_time"  disabled="disabled" type="radio"  value="<?php echo $Single; ?>"/>&nbsp;<del><?php echo $Single; ?></del>
                                             </div><?php
-                    }
-                }// end of enable isset
-            }// end foreach
-            unset($DisableSlotsTimes);
-        } // end else 
-        ?><br />
+                                        }
+                                    }// end of enable isset
+                                }// end foreach
+                                unset($DisableSlotsTimes);
+                            } // end else 
+                            ?><br />
                             <div id="selecttimediv"><!--display select time error --></div>
                         </div>
 
-        <?php if (!$Enable && !$TodaysAllDayEvent) { ?>
+                        <?php if (!$Enable && !$TodaysAllDayEvent) { ?>
                             <p align=center class='apcal_alert apcal_alert-error' style='width:auto;'><strong><?php _e("Sorry! Today's all appointments has been booked.", "appointzilla"); ?></strong></p>
                             <a class="apcal_btn apcal_btn-primary" id="back" onclick="Backbutton()"><i class="icon-arrow-left"></i> <?php _e("Back", "appointzilla"); ?></a><?php } else if (!$TodaysAllDayEvent && $Enable) {
-            ?>
+                            ?>
                             <input type="hidden" name="serviceid" id="serviceid" value="<?php echo $_GET['ServiceId']; ?>" />
                             <input type="hidden" name="appointmentdate" id="appointmentdate"  value="<?php echo $_GET['AppDate']; ?>" />
                             <input type="hidden" name="serviceduration" id="serviceduration"  value="<?php echo $ServiceDuration; ?>" />
@@ -1152,7 +1171,7 @@ function appointment_calendar_shortcode() {
                                     border-top: 0 solid #DDDDDD;
                                 }
                             </style><?php }
-        ?>
+                        ?>
                     </div>
                     <!--</div>-->
                 </form>

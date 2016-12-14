@@ -292,3 +292,27 @@ function display_export_lists_page() {
 // Including Calendar Short-Code Page
 require_once("appointment-calendar-shortcode.php");
 require_once("appointment-calendar-mobile.php");
+
+
+// Ajax Handler
+add_action( 'wp_ajax_nopriv_preluare_angajati', 'preluareListaAngajati' );
+function preluareListaAngajati() {
+	// Get the Post ID from the URL
+	$pid = $_REQUEST['pid'];
+	// Instantiate WP_Ajax_Response
+	$response = new WP_Ajax_Response;
+
+		$response->add( array(
+			'data'	=> 'success',
+			'supplemental' => array(
+				'pid' => $pid,
+				'message' => 'This post has been deleted',
+			),
+		) );
+	
+	// Whatever the outcome, send the Response back
+	$response->send();
+
+	// Always exit when doing Ajax
+	exit();
+}
