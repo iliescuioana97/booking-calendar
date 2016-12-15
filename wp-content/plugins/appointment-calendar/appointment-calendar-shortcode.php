@@ -40,6 +40,8 @@ function appointment_calendar_shortcode() {
         $AppointmentDate = date("Y-m-d", strtotime(sanitize_text_field($_POST['AppDate'])));
 
         $ServiceId = intval($_POST['ServiceId']);
+        
+        $StaffId = intval($_POST['StaffId']);
 
         $ServiceDuration = sanitize_text_field($_POST['Service_Duration']);
 
@@ -63,15 +65,16 @@ function appointment_calendar_shortcode() {
                         "
 			INSERT INTO $AppointmentsTable 
 		
-			( id , name , email , service_id , phone , start_time , end_time , date , note , appointment_key , status , appointment_by )
+			( id , name , email , service_id , staff_id, phone , start_time , end_time , date , note , appointment_key , status , appointment_by )
 		
-			VALUES ( %d , %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+			VALUES ( %d , %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 			
 			", array(
                     null,
                     $ClientName,
                     $ClientEmail,
                     $ServiceId,
+                    $StaffId,
                     $ClientPhone,
                     $StartTime,
                     $EndTime,
@@ -422,17 +425,17 @@ function appointment_calendar_shortcode() {
                 ]
         });
         //jQuery UI date picker on modal for
-        //document.addnewappointment.appdate.value = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';      ?>', new Date());
+        //document.addnewappointment.appdate.value = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';         ?>', new Date());
         /*jQuery(function(){
          jQuery("#datepicker").datepicker({
          inline: true,
          minDate: 0,
          altField: '#alternate',
-         firstDay: <?php //if($AllCalendarSettings['calendar_start_day'] != '') echo $AllCalendarSettings['calendar_start_day']; else echo "0";       ?>,
+         firstDay: <?php //if($AllCalendarSettings['calendar_start_day'] != '') echo $AllCalendarSettings['calendar_start_day']; else echo "0";          ?>,
          //beforeShowDay: unavailable,
          onSelect: function(dateText, inst) {
          var dateAsString = dateText;
-         var seleteddate = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';      ?>', new Date(dateAsString));
+         var seleteddate = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';         ?>', new Date(dateAsString));
          var seleteddate2 = jQuery.datepicker.formatDate('dd-mm-yy', new Date(dateAsString));
          document.addnewappointment.appdate.value = seleteddate;
          },
@@ -440,7 +443,7 @@ function appointment_calendar_shortcode() {
          //jQuery( "#datepicker" ).datepicker( jQuery.datepicker.regional[ "af" ] );
          });*/
 
-        //Modal Form Works - show frist modal
+        //Modal Form Works - show first modal
         jQuery('#addappointment').click(function(){
         var todaydate = jQuery.fullCalendar.formatDate(new Date(), 'dd-MM-yyyy');
         jQuery('#appdate').val(todaydate);
@@ -458,8 +461,9 @@ function appointment_calendar_shortcode() {
         return false;
         }
         var ServiceId = jQuery('#service').val();
+        var StaffId = jQuery('#employee').val();
         var AppDate = jQuery('#appdate').val();
-        var SecondData = "ServiceId=" + ServiceId + "&AppDate=" + AppDate;
+        var SecondData = "ServiceId=" + ServiceId + "&AppDate=" + AppDate+ "&StaffId=" + StaffId;
         jQuery('#loading1').show(); // loading button onclick next1 at first modal
         jQuery('#next1').hide(); // hide next button
         jQuery.ajax({
@@ -520,14 +524,14 @@ function appointment_calendar_shortcode() {
         jQuery('#AppSecondModal').hide();
         });
         });
-    //Modal Form Works
+        //Modal Form Works
         function Backbutton() {
         jQuery('#AppFirstModal').show();
         jQuery('#AppSecondModalDiv').hide();
         jQuery('#next1').show();
         }
 
-    //validation on second modal form submissions == appointment_register_nonce_field
+        //validation on second modal form submissions == appointment_register_nonce_field
         function CheckValidation() {
         jQuery(".apcal-error").hide();
         var start_time = jQuery('input[name=start_time]:radio:checked').val();
@@ -565,6 +569,7 @@ function appointment_calendar_shortcode() {
 
         var wp_nonce = jQuery('#appointment_register_nonce_field').val();
         var ServiceId = jQuery('#serviceid').val();
+        var StaffId = jQuery('#staffid').val();
         var AppDate = jQuery('#appointmentdate').val();
         var ServiceDuration = jQuery('#serviceduration').val();
         var StartTime = jQuery('input[name=start_time]:radio:checked').val();
@@ -573,7 +578,7 @@ function appointment_calendar_shortcode() {
         var Client_Phone = jQuery('#clientphone').val();
         var Client_Note = jQuery('#clientnote').val();
         var currenturl = jQuery(location).attr('href');
-        var SecondData = "ServiceId=" + ServiceId + "&AppDate=" + AppDate + "&StartTime=" + StartTime + '&Client_Name=' + Client_Name + '&Client_Email=' + Client_Email + '&Client_Phone=' + Client_Phone + '&Client_Note=' + Client_Note + '&Service_Duration=' + ServiceDuration + '&wp_nonce=' + wp_nonce;
+        var SecondData = "StaffId=" + StaffId+ "&ServiceId=" + ServiceId + "&AppDate=" + AppDate + "&StartTime=" + StartTime + '&Client_Name=' + Client_Name + '&Client_Email=' + Client_Email + '&Client_Phone=' + Client_Phone + '&Client_Note=' + Client_Note + '&Service_Duration=' + ServiceDuration + '&wp_nonce=' + wp_nonce;
         var currenturl = jQuery(location).attr('href');
         var url = currenturl;
         jQuery('#loading2').show(); // loading button onclick next1 at first modal
@@ -726,20 +731,37 @@ function appointment_calendar_shortcode() {
                             <?php } ?>
                         </select>
                         <br>
-
-
+                        <br>
+                        <strong><?php _e("Selecteaza angajatul", "appointzilla"); ?>:</strong><br />
                         <script>
                             var url = '/wp-admin/admin-ajax.php';
                             jQuery("#service").change(function() {
                             var idserviciu = jQuery("#service").val();
                             jQuery.ajax({
                             method: "GET",
-                                    ajax.url: url,
+                                    url: url,
                                     data: { action: "preluare_angajati", serviciu: idserviciu}
 
                             })
                                     .done(function(msg) {
-                                    alert("Data Saved: " + msg);
+
+                                    var $el = jQuery("#employee");
+                                    $el.empty(); // remove old options
+
+                                    if (msg.status == 'success'){
+                                        $el.append(jQuery("<option></option>")
+                                                .attr("value", '').text('Orice angajat'));
+                                        jQuery.each(msg.employees, function(key, value) {
+                                        
+                                        $el.append(jQuery("<option></option>")
+                                                .attr("value", value.id).text(value.name));
+                                        });
+                                    }else{
+                                        $el.append(jQuery("<option></option>")
+                                                .attr("value", '').text('Nu exista personal disponibil'));
+                                    }
+
+
                                     });
                             });
                         </script>
@@ -754,6 +776,7 @@ function appointment_calendar_shortcode() {
                                     ?>
                                 </option>
                             <?php } ?> </select>
+                        <br>
                         <br>
                         <button name="next1" class="apcal_btn" type="button" id="next1" value="next1"><?php _e("Mai departe", "appointzilla"); ?> <i class="icon-arrow-right"></i></button>
                         <div id="loading1" style="display:none;"><?php _e("Loading...", "appointzilla"); ?><img src="<?php echo plugins_url() . "/appointment-calendar/images/loading.gif"; ?>" /></div>
@@ -784,6 +807,7 @@ function appointment_calendar_shortcode() {
                             // time-slots calculation
                             global $wpdb;
                             $ServiceId = intval($_GET["ServiceId"]);
+                            $StaffId = intval($_GET["StaffId"]);
                             $ServiceTableName = $wpdb->prefix . "ap_services";
                             $ServiceData = $wpdb->get_row($wpdb->prepare("SELECT `name`, `duration` FROM `$ServiceTableName` WHERE `id` = %d", $ServiceId), OBJECT);
 
@@ -1131,6 +1155,7 @@ function appointment_calendar_shortcode() {
                             <a class="apcal_btn apcal_btn-primary" id="back" onclick="Backbutton()"><i class="icon-arrow-left"></i> <?php _e("Back", "appointzilla"); ?></a><?php } else if (!$TodaysAllDayEvent && $Enable) {
                             ?>
                             <input type="hidden" name="serviceid" id="serviceid" value="<?php echo $_GET['ServiceId']; ?>" />
+                            <input type="hidden" name="staffid" id="staffid" value="<?php echo $_GET['StaffId']; ?>" />
                             <input type="hidden" name="appointmentdate" id="appointmentdate"  value="<?php echo $_GET['AppDate']; ?>" />
                             <input type="hidden" name="serviceduration" id="serviceduration"  value="<?php echo $ServiceDuration; ?>" />
                             <table width="100%" id="bordercssremove">
