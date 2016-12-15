@@ -924,7 +924,7 @@ function appointment_calendar_shortcode() {
 
                                 //Fetch All today's appointments and calculate disable slots
                                 $AppointmentTableName = $wpdb->prefix . "ap_appointments";
-                                $AllAppointmentsData = $wpdb->get_results($wpdb->prepare("SELECT `start_time`, `end_time` FROM `$AppointmentTableName` WHERE `date`= %s", $AppointmentDate), OBJECT);
+                                $AllAppointmentsData = $wpdb->get_results($wpdb->prepare("SELECT `start_time`, `end_time` FROM `$AppointmentTableName` WHERE `date`= %s AND `staffid`=%s" , $AppointmentDate, ------$StaffId), OBJECT);
 
                                 if ($AllAppointmentsData) {
                                     foreach ($AllAppointmentsData as $Appointment) {
