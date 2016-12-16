@@ -382,8 +382,6 @@ else echo "0"; ?>,
     <br>
         <br>
             </div>
-
-
             <!----Add New Appointment Button--->
             <div id="bkbtndiv" align="center" style="padding:5px;">
                 <button name="addappointment" class="btn btn-primary" type="submit" id="addappointment">
@@ -398,7 +396,8 @@ else echo "0"; ?>,
                     </strong>
                 </button>
             </div>
-
+            
+                       
             <!---show full-calendar--->
             <div id="calendar" style="background-color: #ffffff;"></div>
 

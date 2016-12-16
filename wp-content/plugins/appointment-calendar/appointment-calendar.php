@@ -307,6 +307,10 @@ require_once("appointment-calendar-mobile.php");
 add_action('wp_ajax_nopriv_preluare_angajati', 'preluareListaAngajati');
 add_action('wp_ajax_preluare_angajati', 'preluareListaAngajati');
 
+add_action('wp_ajax_nopriv_afisare_calendar_serviciu', 'afisareCalendar');
+add_action('wp_ajax_afisare_calendar_serviciu', 'afisareCalendar');
+
+
 function preluareListaAngajati() {
     global $wpdb;
     
@@ -339,4 +343,38 @@ function preluareListaAngajati() {
 
     // Always exit when doing Ajax
     exit();
+}
+
+function afisareCalendar() {
+//Loading Appointments On Calendar Start - DE PUS DUPA AJAAAAAX
+      global $wpdb;
+      $serviciu1 = $_REQUEST['serviciu'];
+      $AppointmentTableName = $wpdb->prefix . "ap_appointments";
+      $AllAppointments = $wpdb->get_results($wpdb->prepare("select name, start_time, end_time, date FROM $AppointmentTableName where id > %d AND staff_id = %d", null, $serviciu1), OBJECT);
+
+      if ($AllAppointments) {
+      foreach ($AllAppointments as $single) {
+      $title = $single->name;
+      $start = date("H, i", strtotime($single->start_time));
+      $end = date("H, i", strtotime($single->end_time));
+
+      // subtract 1 from month digit coz calendar work on month 0-11
+      $y = date('Y', strtotime($single->date));
+      $m = date('n', strtotime($single->date)) - 1;
+      $d = date('d', strtotime($single->date));
+      $date = "$y-$m-$d";
+
+      $date = str_replace("-", ", ", $date);
+      ?> 
+      {
+      title: "<?php _e("Rezervat", "appointzilla"); ?>",
+      start: new Date(<?php echo "$date, $start"; ?>),
+      end: new Date(<?php echo "$date, $end"; ?>),
+      allDay: false,
+      backgroundColor : "#f22e2e",
+      textColor: "black",
+      }, <?php
+      }
+      }
+    
 }
