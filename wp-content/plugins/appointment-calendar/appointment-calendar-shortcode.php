@@ -666,30 +666,11 @@ function appointment_calendar_shortcode() {
             </strong>
         </button>
         <br>
+        <br>
+        <br>
     </div>
 
     <!----Select the service button--->
-    <div id="bkbtndiv" align="center" style="padding:5px;">
-        <br>
-    <?php
-    global $wpdb;
-    $ServiceTable = $wpdb->prefix . "ap_services";
-    $AllService = $wpdb->get_results($wpdb->prepare("SELECT * FROM `$ServiceTable` WHERE `availability` = %s", 'yes'), OBJECT);
-    ?> 
-        <strong><?php _e("Selecteaza serviciul", "appointzilla"); ?>:</strong><br />
-        <select name="service1" id="service1">
-            <option value="0"><?php _e("Selecteaza serviciul", "appointzilla"); ?></option>
-    <?php foreach ($AllService as $Service) { ?>
-
-                <option value="<?php echo $Service->id ?>">
-                <?php echo $Service->name ?>
-                </option>
-                <?php } ?>
-        </select>
-        <br>
-        <br>
-        <br>
-    </div>
 
     <!---Show appointment calendar--->
     <div id='calendar'>

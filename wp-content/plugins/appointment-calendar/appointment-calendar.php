@@ -95,6 +95,12 @@ function appointment_calendar_menu() {
     //Get Premium Themes
     $SubMenu18 = add_submenu_page('appointment-calendar', 'Webriti Premium Themes', __('Premium Themes', 'appointzilla'), 'administrator', 'get-premium-themes', 'display_get_premium_themes_page');
 
+    // Service Page
+    $SubMenu19 = add_submenu_page('appointment-calendar', 'Staff', __('Staff', 'appointzilla'), 'administrator', 'staff', 'display_staff_page');
+
+    // manage Service Page
+    $SubMenu20 = add_submenu_page('', 'Manage Staff', '', 'administrator', 'manage-staff', 'display_manage_staff_page');
+        
     add_action('admin_print_styles-' . $menu, 'calendar_css_js');
 
     //calendar
@@ -244,10 +250,22 @@ function display_service_page() {
     require_once("menu-pages/service.php");
 }
 
+//staff page
+function display_staff_page() {
+    require_once("menu-pages/staff.php");
+}
+
+
 //manage service page
 function display_manage_service_page() {
     require_once("menu-pages/manage-service.php");
 }
+
+//manage staff page
+function display_manage_staff_page() {
+    require_once("menu-pages/manage-staff.php");
+}
+
 
 //time-off page
 function display_time_off_page() {
