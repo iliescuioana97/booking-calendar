@@ -90,8 +90,8 @@ if (!current_user_can('manage_options')) {
         <form method="post">
             <?php wp_nonce_field('appointment_add_cat_nonce_check', 'appointment_add_cat_nonce_check'); ?>
             <?php _e("Staff member name ", "appointzilla"); ?>: <input type="text" id="gruopname" name="gruopname" class="inputheight" />
-            
-            <form method="post">
+            <br>
+            <form method="post" style="display:block">
                 <?php
                 global $wpdb;
                 //get all category list
@@ -99,19 +99,17 @@ if (!current_user_can('manage_options')) {
                 $Services = $wpdb->get_results($wpdb->prepare("SELECT * FROM `$ServiceTable` where id > %d", null));
                 foreach ($Services as $Service) {
                     ?>
-                    <input type="radio" name="<?php echo ucwords($Service->name); ?>" value="<?php echo ucwords($Service->id); ?>" />
+                <div style="display:block">
+                <input type="radio" name="<?php echo ucwords($Service->name); ?>" value="<?php echo ucwords($Service->id); ?>" />
                 <label><?php echo ucwords($Service->name); ?></label> <?php } ?>
+                </div>
             </form>
-            
+            <br>
              <button style="margin-bottom:10px;" id="CreateGruop" type="submit" class="btn btn-small btn-success" name="CreateGruop"><i class="icon-ok icon-white"></i> <?php _e("Create STAFF member", "appointzilla"); ?></button>
             <button style="margin-bottom:10px;" id="CancelGruop" type="button" class="btn btn-small btn-danger" name="CancelGruop" onclick="cancelgrup();"><i class="icon-remove icon-white"></i> <?php _e("Cancel", "appointzilla"); ?></button>
             
        </form>
     </div>
-
-
-
-
 
 
     <!---New category div box end --->
