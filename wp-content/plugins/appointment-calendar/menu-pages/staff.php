@@ -9,7 +9,7 @@ if (!current_user_can('manage_options')) {
 }
 ?>
 <div class="bs-docs-example tooltip-demo" style="background-color: #FFFFFF;">
-    <div style="background:#C3D9FF; margin-bottom:10px; padding-left:10px;"><h3><?php _e("Services", "appointzilla"); ?></h3></div>
+    <div style="background:#C3D9FF; margin-bottom:10px; padding-left:10px;"><h3><?php _e("Employees", "appointzilla"); ?></h3></div>
     <?php
     global $wpdb;
     //get all category list
@@ -36,7 +36,7 @@ if (!current_user_can('manage_options')) {
                             <?php if ($GroupName->id == '1')  ?>
                             <a rel="tooltip" href="#" data-placement="left" class="btn btn-success btn-small" id="<?php echo $GroupName->id; ?>" onclick="editgruop('<?php echo $GroupName->id; ?>')" title="<?php _e("Rename Category", "appointzilla"); ?>"><?php _e("Rename", "appointzilla"); ?></a>
                             <?php if ($GroupName->id != '1') { ?>
-                                | <a rel="tooltip" href="?page=service&gid=<?php echo $GroupName->id; ?>" class="btn btn-danger btn-small" onclick="return confirm('<?php _e("Do you want to delete this Category?", "appointzilla"); ?>')" title="<?php _e("Delete", "appointzilla"); ?>"><?php _e("Delete", "appointzilla"); ?></a>
+                                | <a rel="tooltip" href="?page=staff&gid=<?php echo $GroupName->id; ?>" class="btn btn-danger btn-small" onclick="return confirm('<?php _e("Do you want to delete this Category?", "appointzilla"); ?>')" title="<?php _e("Delete", "appointzilla"); ?>"><?php _e("Delete", "appointzilla"); ?></a>
                             <?php } ?>
                         </div>
                     </th>
@@ -75,7 +75,7 @@ if (!current_user_can('manage_options')) {
                 <?php } ?>
                 <tr>
                     <td colspan="6">
-                        <a href="?page=manage-service&gid=<?php echo $GroupName->id; ?>" rel="tooltip" title="<?php _e("Add New Service to this Category", "appointzilla"); ?>"><?php _e("+ Add New Service to this Category", "appointzilla"); ?></a>
+                        <a href="?page=manage-staff&gid=<?php echo $GroupName->id; ?>" rel="tooltip" title="<?php _e("Assign new service to this staff member", "appointzilla"); ?>"><?php _e("+ Assign new service to this staff member", "appointzilla"); ?></a>
                     </td>
                 </tr>
             </tbody>
@@ -99,24 +99,36 @@ if (!current_user_can('manage_options')) {
                 $Services = $wpdb->get_results($wpdb->prepare("SELECT * FROM `$ServiceTable` where id > %d", null));
                 foreach ($Services as $Service) {
                     ?>
-                <div style="display:block">
-                <input type="radio" name="<?php echo ucwords($Service->name); ?>" value="<?php echo ucwords($Service->id); ?>" />
-                <label><?php echo ucwords($Service->name); ?></label> <?php } ?>
+                    <div style="display:block">
+                        <input id="radioboxes" type="checkbox" name="options[]" value="<?php echo ucwords($Service->id); ?>" />
+                        <label><?php echo ucwords($Service->name); ?></label> <?php } ?>
                 </div>
             </form>
             <br>
-             <button style="margin-bottom:10px;" id="CreateGruop" type="submit" class="btn btn-small btn-success" name="CreateGruop"><i class="icon-ok icon-white"></i> <?php _e("Create STAFF member", "appointzilla"); ?></button>
-            <button style="margin-bottom:10px;" id="CancelGruop" type="button" class="btn btn-small btn-danger" name="CancelGruop" onclick="cancelgrup();"><i class="icon-remove icon-white"></i> <?php _e("Cancel", "appointzilla"); ?></button>
-            
-       </form>
-    </div>
+            <button style="margin-bottom:10px;" id="CreateGruop2" type="submit" class="btn btn-small btn-success" name="CreateGruop"><i class="icon-ok icon-white"></i> <?php _e("Create STAFF member", "appointzilla"); ?></button>
+            <button style="margin-bottom:10px;" id="CancelGruop2" type="button" class="btn btn-small btn-danger" name="CancelGruop" onclick="cancelgrup();"><i class="icon-remove icon-white"></i> <?php _e("Cancel", "appointzilla"); ?></button>
 
+        </form>
+    </div>
+    <script>
+        jQuery('#CreateGruop2').click(function () {
+            if (!jQuery('#gruopname').val()) {
+                jQuery("#gruopname").after("<span class='apcal-error'><br><strong><?php _e("Name required.", "appointzilla"); ?></strong></span>");
+                return false;
+            } else if (!isNaN(jQuery('#gruopname').val())) {
+                jQuery("#gruopname").after("<span class='apcal-error'><p><strong><?php _e("Invalid name.", "appointzilla"); ?></strong></p></span>");
+                return false;
+            }
+        })
+    </script>
 
     <!---New category div box end --->
 
 
     <?php
-    // insert new service category
+    // insert new staff member
+    global $wpdb;
+    $StaffServiceRel = $wpdb->prefix . "ap_staff_services_relationship";
     $StaffTable = $wpdb->prefix . "ap_staff";
     $ServiceTable = $wpdb->prefix . "ap_services";
     if (isset($_POST['CreateGruop'])) {
@@ -126,10 +138,17 @@ if (!current_user_can('manage_options')) {
             return false;
         }
 
-        global $wpdb;
         $groupename = sanitize_text_field($_POST['gruopname']);
-        $wpdb->query($wpdb->prepare("INSERT INTO `$StaffTable` ( `name` ) VALUES (%s);", $groupename));
-        echo "<script>alert('" . __('Staff member successfully created.', 'appointzilla') . "')</script>";
+        $options =$_POST['options'];
+
+        $wpdb->query($wpdb->prepare("INSERT INTO `$StaffTable` ( `name` ) VALUES (%s);
+        ", $groupename));
+         $StaffId= $wpdb->get_row($wpdb->prepare("SELECT `id` FROM `$StaffTable` WHERE `name` = %s", $groupename), OBJECT);
+        foreach ($options as $o) {
+            $wpdb->query($wpdb->prepare("INSERT INTO `$StaffServiceRel` ( `service_id`, `staff_id` ) VALUES (%d, %d);
+        ", array($o, $StaffId->id)));
+        }
+         echo "<script>alert('" . __('Service category successfully created.', 'appointzilla') ."')</script>";
         echo "<script>location.href='?page=staff';</script>";
     }
 
@@ -140,10 +159,10 @@ if (!current_user_can('manage_options')) {
         $tt = !is_numeric($update_name);
         if ($update_name) {
             if (!is_numeric($update_name)) {
-                $wpdb->query($wpdb->prepare("UPDATE `$ServiceCategoryTable` SET `name` = '$update_name' WHERE `id` =%s;", $update_id));
-                echo "<script>location.href='?page=service';</script>";
+                $wpdb->query($wpdb->prepare("UPDATE `$StaffTable` SET `name` = '$update_name' WHERE `id` =%s;", $update_id));
+                echo "<script>location.href = '?page=staff';</script>";
             } else {
-                echo "<script>alert('" . __("Invalid category name.", "appointzilla") . "');</script>";
+                echo "<script>alert('" . __("Invalid staff name.", "appointzilla") . "');</script>";
             }
         } else {
             echo "<script>alert('" . __("Category name cannot be blank.", "appointzilla") . "');</script>";
@@ -153,21 +172,21 @@ if (!current_user_can('manage_options')) {
     // Delete service category
     if (isset($_GET['gid'])) {
         $DeleteId = intval($_GET['gid']);
-        $wpdb->query($wpdb->prepare("DELETE FROM `$ServiceCategoryTable` WHERE `id` = %s;", $DeleteId));
+        $wpdb->query($wpdb->prepare("DELETE FROM `$StaffTable` WHERE `id` = %s;", $DeleteId));
 
         //update all service category id
-        $UpdateServiceSQL = "UPDATE `$ServiceTable` SET `category_id` = '1' WHERE `category_id` ='$DeleteId';";
+        $UpdateServiceSQL = "UPDATE `$StaffServiceRel` SET `staff_id` = '0' WHERE `staff_id` ='$DeleteId';";
         $wpdb->query($UpdateServiceSQL); // update category
-        echo "<script>alert('" . __('Service category successfully deleted.', 'appointzilla') . "')</script>";
-        echo "<script>location.href='?page=service';</script>";
+        echo "<script>alert('" . __('Staff  successfully deleted.', 'appointzilla') . "')</script>";
+        echo "<script>location.href = '?page=staff';</script>";
     }
 
     // Delete service
     if (isset($_GET['sid'])) {
         $DeleteId = intval($_GET['sid']);
-        $wpdb->query($wpdb->prepare("DELETE FROM `$ServiceTable` WHERE `id` = %s;", $DeleteId));
+        $wpdb->query($wpdb->prepare("DELETE FROM `$StaffServiceRel` WHERE `service_id` = %s;", $DeleteId));
         echo "<script>alert('" . __('Service successfully delete.', 'appointzilla') . "')</script>";
-        echo "<script>location.href='?page=service';</script>";
+        echo "<script>location.href = '?page=staff';</script>";
     }
     ?>
 </div>
