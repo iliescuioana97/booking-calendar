@@ -112,6 +112,11 @@ function appointment_calendar_menu() {
     add_action('admin_print_styles-' . $SubMenu4, 'other_pages_css_js');
 
     add_action('admin_print_styles-' . $SubMenu5, 'other_pages_css_js');
+    
+    //staff
+    add_action('admin_print_styles-' . $SubMenu19, 'other_pages_css_js');
+
+    add_action('admin_print_styles-' . $SubMenu20, 'other_pages_css_js');
 
     //time-off
     add_action('admin_print_styles-' . $SubMenu6, 'other_pages_css_js');
@@ -140,6 +145,8 @@ function appointment_calendar_menu() {
 
     //get premium themes
     add_action('admin_print_styles-' . $SubMenu18, 'other_pages_css_js');
+    
+    
 }
 
 //end of menu function
