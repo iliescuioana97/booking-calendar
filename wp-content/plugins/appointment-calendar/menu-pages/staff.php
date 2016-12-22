@@ -36,7 +36,7 @@ if (!current_user_can('manage_options')) {
                             <?php if ($GroupName->id == '1')  ?>
                             <a rel="tooltip" href="#" data-placement="left" class="btn btn-success btn-small" id="<?php echo $GroupName->id; ?>" onclick="editgruop('<?php echo $GroupName->id; ?>')" title="<?php _e("Rename Category", "appointzilla"); ?>"><?php _e("Rename", "appointzilla"); ?></a>
                             <?php if ($GroupName->id != '1') { ?>
-                                | <a rel="tooltip" href="?page=staff&gid=<?php echo $GroupName->id; ?>" class="btn btn-danger btn-small" onclick="return confirm('<?php _e("Do you want to delete this Category?", "appointzilla"); ?>')" title="<?php _e("Delete", "appointzilla"); ?>"><?php _e("Delete", "appointzilla"); ?></a>
+                                | <a rel="tooltip" href="?page=staff&gid=<?php echo $GroupName->id; ?>" class="btn btn-danger btn-small" onclick="return confirm('<?php _e("Do you want to delete this Staff member?", "appointzilla"); ?>')" title="<?php _e("Delete", "appointzilla"); ?>"><?php _e("Delete", "appointzilla"); ?></a>
                             <?php } ?>
                         </div>
                     </th>
@@ -44,10 +44,7 @@ if (!current_user_can('manage_options')) {
                 <tr>
                     <th><strong><?php _e("Name", "appointzilla"); ?></strong></th>
                     <th><strong><?php _e("Description", "appointzilla"); ?></strong></th>
-                    <th><strong><?php _e("Duration", "appointzilla"); ?></strong></th>
-                    <th><strong><?php _e("Cost", "appointzilla"); ?></strong></th>
-                    <th><strong><?php _e("Availability", "appointzilla"); ?></strong></th>
-                    <th><strong><?php _e("Action", "appointzilla"); ?></strong></th>
+                   
                 </tr>
             </thead>
             <tbody>
@@ -62,15 +59,7 @@ if (!current_user_can('manage_options')) {
                     <tr class="odd" style="border-bottom:1px;">
                         <td><em><?php echo ucwords($Service->name); ?></em></td>
                         <td> <em><?php echo ucfirst($Service->desc); ?></em> </td>
-                        <td><em><?php echo $Service->duration . " " . ucfirst($Service->unit); ?></em></td>
-                        <td><em><?php echo '&#36;' . $Service->cost; ?></em></td>
-                        <td><em><?php echo ucfirst($Service->availability); ?></em></td>
-                        <td class="button-column">
-                            <a rel="tooltip" href="?page=manage-service&sid=<?php echo $Service->id; ?>" title="<?php _e("Update", "appointzilla"); ?>"><i class="icon-pencil"></i></a> &nbsp;
-                            <?php if ($Service->id != 1) { ?>
-                                <a rel="tooltip" href="?page=service&sid=<?php echo $Service->id; ?>" onclick="return confirm('<?php echo _e("Do you want to delete this service?", "appointzilla"); ?>')" title="<?php _e("Delete", "appointzilla"); ?>" ><i class="icon-remove"></i>
-                                <?php } ?>
-                        </td>
+                       
                     </tr>
                 <?php } ?>
                 <tr>
@@ -99,9 +88,9 @@ if (!current_user_can('manage_options')) {
                 $Services = $wpdb->get_results($wpdb->prepare("SELECT * FROM `$ServiceTable` where id > %d", null));
                 foreach ($Services as $Service) {
                     ?>
-                    <div style="display:block">
-                        <input id="radioboxes" type="checkbox" name="options[]" value="<?php echo ucwords($Service->id); ?>" />
-                        <label><?php echo ucwords($Service->name); ?></label> <?php } ?>
+                   <div style="display:block">
+                        <input style="display: inline-block" id="radioboxes" type="checkbox" name="options[]" value="<?php echo ucwords($Service->id); ?>" />
+                        <label style="display: inline-block"><?php echo ucwords($Service->name); ?></label> <?php } ?>
                 </div>
             </form>
             <br>
@@ -148,7 +137,7 @@ if (!current_user_can('manage_options')) {
             $wpdb->query($wpdb->prepare("INSERT INTO `$StaffServiceRel` ( `service_id`, `staff_id` ) VALUES (%d, %d);
         ", array($o, $StaffId->id)));
         }
-         echo "<script>alert('" . __('Service category successfully created.', 'appointzilla') ."')</script>";
+         echo "<script>alert('" . __('Staff member successfully added.', 'appointzilla') ."')</script>";
         echo "<script>location.href='?page=staff';</script>";
     }
 

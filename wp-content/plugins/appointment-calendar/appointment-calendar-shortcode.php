@@ -18,7 +18,7 @@ function appointment_calendar_shortcode() {
         }
     }
 
-    //save appointment and email admin & client/customer
+//save appointment and email admin & client/customer
     if (isset($_POST['Client_Name']) && isset($_POST['Client_Email'])) {
 
         global $wpdb;
@@ -49,7 +49,7 @@ function appointment_calendar_shortcode() {
 
 
 
-        //calculate end time according to service duration
+//calculate end time according to service duration
         $EndTime = date('h:i A', strtotime("+$ServiceDuration minutes", strtotime($StartTime)));
 
         $AppointmentKey = md5(date("F j, Y, g:i a"));
@@ -92,7 +92,7 @@ function appointment_calendar_shortcode() {
 
             $BlogName = get_bloginfo();
 
-            //get service details
+//get service details
             $ServiceTable = $wpdb->prefix . "ap_services";
 
             $ServiceData = $wpdb->get_row($wpdb->prepare("SELECT * FROM $ServiceTable WHERE id = %d", $ServiceId), OBJECT);
@@ -100,7 +100,7 @@ function appointment_calendar_shortcode() {
             $ServiceName = $ServiceData->name;
 
 
-            //check notification is enabled
+//check notification is enabled
             $NotificationStatus = get_option('emailstatus');
             if ($NotificationStatus == "on") {
                 $Attachments = "";
@@ -158,30 +158,30 @@ function appointment_calendar_shortcode() {
                 $ClientBody = str_replace("[app-key]", $AppointmentKey, $ClientBody);
                 $ClientBody = str_replace("[app-note]", ucfirst($ClientNote), $ClientBody);
 
-                //check email type
+//check email type
                 $EmailType = get_option('emailtype');
                 $EmailDetails = unserialize(get_option('emaildetails'));
-                //wp-email
+//wp-email
                 if ($EmailType == "wpmail") {
                     $AdminEmail = $EmailDetails['wpemail'];
                     $Headers[] = "From: Admin <" . $AdminEmail . ">";
-                    //send wp email to client
+//send wp email to client
                     wp_mail($ClientEmail, $ClientSubject, $ClientBody, $Headers, $Attachments);
-                    //send wp email to admin
+//send wp email to admin
                     wp_mail($AdminEmail, $AdminSubject, $AdminBody, $Headers, $Attachments);
                 }
 
-                //php-email
+//php-email
                 if ($EmailType == "phpmail") {
                     $AdminEmail = $EmailDetails['phpemail'];
                     $Headers[] = "From: Admin <" . $AdminEmail . ">";
-                    ///send php email to client
+///send php email to client
                     mail($ClientEmail, $ClientSubject, $ClientBody, $Headers);
-                    //send php email to admin
+//send php email to admin
                     mail($AdminEmail, $AdminSubject, $AdminBody, $Headers);
                 }
 
-                //wp-email
+//wp-email
                 if ($EmailType == "smtp") {
                     require_once('menu-pages/notification/Email.php');
                     $AdminEmail = $EmailDetails['smtpemail'];
@@ -191,9 +191,9 @@ function appointment_calendar_shortcode() {
                     $Password = $EmailDetails['password'];
                     $Headers[] = "From: Admin <" . $AdminEmail . ">";
                     $Email = new SendEmail();
-                    //send smtp email to client
+//send smtp email to client
                     $Email->NotifyClient($HostName, $PortNo, $SMTPEmail, $Password, $AdminEmail, $ClientEmail, $ClientSubject, $ClientBody, $BlogName);
-                    //send smtp email to admin
+//send smtp email to admin
                     $Email->NotifyAdmin($HostName, $PortNo, $SMTPEmail, $Password, $AdminEmail, $AdminSubject, $AdminBody, $BlogName);
                 }
             } //end of notification enable check if
@@ -266,38 +266,38 @@ function appointment_calendar_shortcode() {
                 jQuery('#AppFirstModal').show();
                 },
                 events: [
-/*
-
-                        var url = '/wp-admin/admin-ajax.php';
-                jQuery("#service1").change(function() {
-                var idserviciu = jQuery("#service1").val();
-                jQuery.ajax({
-                method: "GET",
-                        url: url,
-                        data: { action: "afisare_calendar_serviciu", serviciu1: idserviciu}
-
-                })
-                        .done(function(msg) {
-
-                        var $el = jQuery("#employee");
-                        $el.empty(); // remove old options
-
-                        if (msg.status == 'success'){
-                        $el.append(jQuery("<option></option>")
-                                .attr("value", '').text('Orice angajat'));
-                        jQuery.each(msg.employees, function(key, value) {
-
-                        $el.append(jQuery("<option></option>")
-                                .attr("value", value.id).text(value.name));
-                        });
-                        } else{
-                        $el.append(jQuery("<option></option>")
-                                .attr("value", '').text('Nu exista personal disponibil'));
-                        }
-
-
-                        });
-                }); */
+                        /*
+                             
+                         var url = '/wp-admin/admin-ajax.php';
+                         jQuery("#service1").change(function() {
+                         var idserviciu = jQuery("#").val();
+                         jQuery.ajax({
+                         method: "GET",
+                         url: url,
+                         data: { action: "afisare_calendar_serviciu", serviciu1: idserviciu}
+                             
+                         })
+                         .done(function(msg) {
+                             
+                         var $el = jQuery("#employee");
+                         $el.empty(); // remove old options
+                             
+                         if (msg.status == 'success'){
+                         $el.append(jQuery("<option></option>")
+                         .attr("value", '').text('Orice angajat'));
+                         jQuery.each(msg.employees, function(key, value) {
+                             
+                         $el.append(jQuery("<option></option>")
+                         .attr("value", value.id).text(value.name));
+                         });
+                         } else{
+                         $el.append(jQuery("<option></option>")
+                         .attr("value", '').text('Nu exista personal disponibil'));
+                         }
+                             
+                             
+                         });
+                         }); */
     <?php
 //Loading Appointments On Calendar Start - DE PUS DUPA AJAAAAAX
     /* global $wpdb;
@@ -337,15 +337,15 @@ function appointment_calendar_shortcode() {
 
     if ($AllEvents) {
         foreach ($AllEvents as $Event) {
-            // convert time foramt H:i:s
+// convert time foramt H:i:s
             $starttime = date("H:i", strtotime($Event->start_time));
             $endtime = date("H:i", strtotime($Event->end_time));
-            // change time format according to calendar
+// change time format according to calendar
             $starttime = str_replace(":", ", ", $starttime);
             $endtime = str_replace(":", ", ", $endtime);
 
             $startdate = $Event->start_date;
-            // subtract 1 from $startdate month digit coz calendar work on month 0-11
+// subtract 1 from $startdate month digit coz calendar work on month 0-11
             $y = date('Y', strtotime($startdate));
             $m = date('n', strtotime($startdate)) - 1;
             $d = date('d', strtotime($startdate));
@@ -353,7 +353,7 @@ function appointment_calendar_shortcode() {
             $startdate = str_replace("-", ", ", $startdate);     //changing date format
 
             $enddate = $Event->end_date;
-            // subtract 1 from $startdate month digit coz calendar work on month 0-11
+// subtract 1 from $startdate month digit coz calendar work on month 0-11
             $y2 = date('Y', strtotime($enddate));
             $m2 = date('n', strtotime($enddate)) - 1;
             $d2 = date('d', strtotime($enddate));
@@ -377,17 +377,17 @@ function appointment_calendar_shortcode() {
 //dont show event on filtering
     if (isset($AllREvents)) {
         foreach ($AllREvents as $Event) {
-            //convert time foramt H:i:s
+//convert time foramt H:i:s
             $starttime = date("H:i", strtotime($Event->start_time));
             $endtime = date("H:i", strtotime($Event->end_time));
-            //change time format according to calendar
+//change time format according to calendar
             $starttime = str_replace(":", ", ", $starttime);
             $endtime = str_replace(":", ", ", $endtime);
             $startdate = $Event->start_date;
             $enddate = $Event->end_date;
 
             if ($Event->repeat != 'M') {
-                //if appointment type then calulate RTC(recutting date calulation)
+//if appointment type then calulate RTC(recutting date calulation)
                 if ($Event->repeat == 'PD')
                     $RDC = 1;
                 if ($Event->repeat == 'D')
@@ -404,18 +404,18 @@ function appointment_calendar_shortcode() {
                     $currentDateStr = date("Y-m-d", $currentDateTS);
                     $AlldatesArr[] = $currentDateStr;
 
-                    // subtract 1 from $startdate month digit coz calendar work on month 0-11
+// subtract 1 from $startdate month digit coz calendar work on month 0-11
                     $y = date('Y', strtotime($currentDateStr));
                     $m = date('n', strtotime($currentDateStr)) - 1;
                     $d = date('d', strtotime($currentDateStr));
                     $startdate = "$y-$m-$d";
                     $startdate = str_replace("-", ", ", $startdate);     //changing date format
-                    // subtract 1 from $startdate month digit coz calendar work on month 0-11
+// subtract 1 from $startdate month digit coz calendar work on month 0-11
                     $y2 = date('Y', strtotime($currentDateStr));
                     $m2 = date('n', strtotime($currentDateStr)) - 1;
                     $d2 = date('d', strtotime($currentDateStr));
                     $enddate = "$y2-$m2-$d2";
-                    //changing date format
+//changing date format
                     $enddate = str_replace("-", ", ", $enddate);
                     ?>
                                 {
@@ -431,7 +431,7 @@ function appointment_calendar_shortcode() {
                 $i = 0;
                 do {
                     $NextDate = date("Y-m-d", strtotime("+$i months", strtotime($startdate)));
-                    // subtract 1 from $startdate month digit coz calendar work on month 0-11
+// subtract 1 from $startdate month digit coz calendar work on month 0-11
                     $y = date('Y', strtotime($NextDate));
                     $m = date('n', strtotime($NextDate)) - 1;
                     $d = date('d', strtotime($NextDate));
@@ -458,17 +458,17 @@ function appointment_calendar_shortcode() {
                 ]
         });
         //jQuery UI date picker on modal for
-        //document.addnewappointment.appdate.value = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';               ?>', new Date());
+        //document.addnewappointment.appdate.value = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';                      ?>', new Date());
         /*jQuery(function(){
          jQuery("#datepicker").datepicker({
          inline: true,
          minDate: 0,
          altField: '#alternate',
-         firstDay: <?php //if($AllCalendarSettings['calendar_start_day'] != '') echo $AllCalendarSettings['calendar_start_day']; else echo "0";                ?>,
+         firstDay: <?php //if($AllCalendarSettings['calendar_start_day'] != '') echo $AllCalendarSettings['calendar_start_day']; else echo "0";                       ?>,
          //beforeShowDay: unavailable,
          onSelect: function(dateText, inst) {
          var dateAsString = dateText;
-         var seleteddate = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';               ?>', new Date(dateAsString));
+         var seleteddate = jQuery.datepicker.formatDate('<?php //echo 'dd-mm-yy';                      ?>', new Date(dateAsString));
          var seleteddate2 = jQuery.datepicker.formatDate('dd-mm-yy', new Date(dateAsString));
          document.addnewappointment.appdate.value = seleteddate;
          },
@@ -585,6 +585,25 @@ function appointment_calendar_shortcode() {
         return false;
         }
 
+        var ServiceId = jQuery('#serviceid').val();
+    <?php
+    $AppTable = $wpdb->prefix . "ap_appointments";
+    $AppTableData = $wpdb->get_results($wpdb->prepare("select `email`,`start_time`,`end_time`,`date` from `$AppTable`"));
+    foreach ($AppTableData as $Client) {
+//        $time = strtotime($Client->date);
+//        $myFormatForView = date("d-m-Y", $time);
+        $myFormatForView = date("d-m-Y", strtotime($Client->date));
+        ?>
+            if ((jQuery('#clientemail').val() === '<?php echo $Client->email; ?>') && (jQuery('#appdate').val() === '<?php echo $myFormatForView; ?>'))
+            {                                    
+                jQuery("#clientname").after("<span class='apcal-error'><br><strong><?php _e("Already have an appointment at this date", "appointzilla"); ?></strong></span>");
+                return false;
+            } else{console.log(jQuery('#clientemail').val());
+                    console.log(" not equal");
+            }
+    <?php } ?>
+
+
         var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         if (!jQuery('#clientemail').val()) {
         jQuery("#clientemail").after("<span class='apcal-error'><br><strong><?php _e("Email required.", "appointzilla"); ?></strong></span>");
@@ -646,9 +665,9 @@ function appointment_calendar_shortcode() {
     <!---Display Booking Instruction--->
     <?php if ($AllCalendarSettings['apcal_booking_instructions']) { ?>
         <div id="bookinginstructions" align="center">
-        <?php echo $AllCalendarSettings['apcal_booking_instructions']; ?>
+            <?php echo $AllCalendarSettings['apcal_booking_instructions']; ?>
         </div>
-        <?php } ?>
+    <?php } ?>
 
 
 
@@ -656,13 +675,13 @@ function appointment_calendar_shortcode() {
     <div id="bkbtndiv" align="center" style="padding:5px;">
         <button name="addappointment" class="apcal_btn apcal_btn-primary apcal_btn-large" type="submit" id="addappointment">
             <strong></strong><i class="icon-calendar icon-white"></i>
-    <?php
-    if ($AllCalendarSettings['booking_button_text']) {
-        echo $AllCalendarSettings['booking_button_text'];
-    } else {
-        echo _e("Schedule New Appointment", "appointzilla");
-    }
-    ?>
+            <?php
+            if ($AllCalendarSettings['booking_button_text']) {
+                echo $AllCalendarSettings['booking_button_text'];
+            } else {
+                echo _e("Schedule New Appointment", "appointzilla");
+            }
+            ?>
             </strong>
         </button>
         <br>
@@ -700,21 +719,21 @@ function appointment_calendar_shortcode() {
                         <!--PHP Date-picker -->
                         <form id="form1" name="form1" method="post" action="">
 
-    <?php
-    require_once('calendar/tc_calendar.php');
+                            <?php
+                            require_once('calendar/tc_calendar.php');
 
-    $curr_date = date("Y-m-d", time());
-    $datepicker2 = plugins_url('calendar/', __FILE__);
-    $myCalendar = new tc_calendar("date1");
-    $myCalendar->setIcon($datepicker2 . "images/iconCalendar.gif");
-    $myCalendar->setDate(date("d"), date("m"), date("Y"));
-    $myCalendar->setPath($datepicker2);
-    $myCalendar->setYearInterval(2035, date('Y'));
-    $startCalendarFrom = date("Y-m-d", strtotime("-1 day", strtotime($curr_date)));
-    $myCalendar->dateAllow($startCalendarFrom, "2035-01-01", false);
-    $myCalendar->setOnChange("myChanged()");
-    $myCalendar->writeScript();
-    ?>
+                            $curr_date = date("Y-m-d", time());
+                            $datepicker2 = plugins_url('calendar/', __FILE__);
+                            $myCalendar = new tc_calendar("date1");
+                            $myCalendar->setIcon($datepicker2 . "images/iconCalendar.gif");
+                            $myCalendar->setDate(date("d"), date("m"), date("Y"));
+                            $myCalendar->setPath($datepicker2);
+                            $myCalendar->setYearInterval(2035, date('Y'));
+                            $startCalendarFrom = date("Y-m-d", strtotime("-1 day", strtotime($curr_date)));
+                            $myCalendar->dateAllow($startCalendarFrom, "2035-01-01", false);
+                            $myCalendar->setOnChange("myChanged()");
+                            $myCalendar->writeScript();
+                            ?>
 
                         </form>
 
@@ -731,78 +750,71 @@ function appointment_calendar_shortcode() {
                         <strong><?php _e("Data rezervarii", "appointzilla"); ?>:</strong><br>
                         <input name="appdate" id="appdate" type="text" readonly="" height="30px;" style="height:30px;" />
 
-    <?php
-    global $wpdb;
-    $ServiceTable = $wpdb->prefix . "ap_services";
-    $AllService = $wpdb->get_results($wpdb->prepare("SELECT * FROM `$ServiceTable` WHERE `availability` = %s", 'yes'), OBJECT);
-    $EmployeeTable = $wpdb->prefix . "ap_staff";
-    $AllEmployees = $wpdb->get_results($wpdb->prepare("SELECT * FROM `$EmployeeTable`"), OBJECT);
-    ?>
+                        <?php
+                        global $wpdb;
+                        $ServiceTable = $wpdb->prefix . "ap_services";
+                        $AllService = $wpdb->get_results($wpdb->prepare("SELECT * FROM `$ServiceTable` WHERE `availability` = %s", 'yes'), OBJECT);
+                        $EmployeeTable = $wpdb->prefix . "ap_staff";
+                        $AllEmployees = $wpdb->get_results($wpdb->prepare("SELECT * FROM `$EmployeeTable`"), OBJECT);
+                        ?>
 
                         <br /><br />
                         <strong><?php _e("Selecteaza serviciul", "appointzilla"); ?>:</strong><br />
                         <select name="service" id="service">
                             <option value="0"><?php _e("Selecteaza serviciul", "appointzilla"); ?></option>
-    <?php foreach ($AllService as $Service) { ?>
-        <?php
-        if ($AllCalendarSettings['show_service_cost'] == 'yes')
-            $ShowCost = 1;
-        else
-            $ShowCost = 0;
-        ?>
+                            <?php foreach ($AllService as $Service) { ?>
                                 <?php
-                                if ($AllCalendarSettings['show_service_duration'] == 'yes')
-                                    $ShowDuration = 1;
-                                else
-                                    $ShowDuration = 0;
+                                $ShowCost = 1;
+
+                                $ShowDuration = 1;
                                 ?>
                                 <option value="<?php echo $Service->id ?>">
-                                <?php
-                                echo ucwords($Service->name);
-                                if ($ShowDuration || $ShowCost)
-                                    echo " (";
-                                if ($ShowDuration) {
-                                    echo $Service->duration . "min";
-                                } if ($ShowDuration && $ShowCost)
-                                    echo "/";
-                                if ($ShowCost) {
-                                    echo "$" . $Service->cost;
-                                }
-                                if ($ShowDuration || $ShowCost)
-                                    echo ")";
-                                ?>
+                                    <?php
+                                    echo ucwords($Service->name);
+                                    if ($ShowDuration || $ShowCost)
+                                        echo " (";
+                                    if ($ShowDuration) {
+                                        echo $Service->duration . "min";
+                                    } if ($ShowDuration && $ShowCost)
+                                        echo "/";
+                                    if ($ShowCost) {
+                                        echo "$" . $Service->cost;
+                                    }
+                                    if ($ShowDuration || $ShowCost)
+                                        echo ")";
+                                    ?>
                                 </option>
-                                <?php } ?>
+                            <?php } ?>
                         </select>
                         <br>
                         <br>
                         <strong><?php _e("Selecteaza angajatul", "appointzilla"); ?>:</strong><br />
                         <script>
-                            var url = '/wp-admin/a                                                                        dmin-ajax.php';
-                            jQuery("#service").chan                                                                                ge(function() {
-                            var idserviciu = jQuery("#s                                                                        ervice").val();
+                            var url = '/wp-admin/admin-ajax.php';
+                            jQuery("#service").change(function() {
+                            var idserviciu = jQuery("#service").val();
                             jQuery.ajax({
                             method: "GET",
                                     url: url,
-                                    data: { action: "preluare_angajati", servici                                        u: idserviciu}
+                                    data: { action: "preluare_angajati", serviciu: idserviciu}
 
                             })
-                                    .done(f                                                                                    unction(msg) {
+                                    .done(function(msg) {
 
-                                    var $el = jQuer                                                                                    y("#employee");
-                                    $el.empty(); // remo                                                                                        ve old options
+                                    var $el = jQuery("#employee");
+                                    $el.empty(); // remove old options
 
-                                    if (msg.st                                            atus == 'success'){
-                                    $el.append(jQuery("<opt                                                                                                        ion></option>")
-                                            .attr("value", '').text('Or                                                                                        ice angajat'));
-                                    jQuery.each(msg.employees, function                                                                                    (key, value) {
+                                    if (msg.status == 'success'){
+                                    $el.append(jQuery("<option></option>")
+                                            .attr("value", '').text('Orice angajat'));
+                                    jQuery.each(msg.employees, function(key, value) {
 
-                                    $el.append(jQuery("<opt                                                                                                    ion></option>")
-                                            .attr("value", value.id).tex                                                                                t(value.name));
+                                    $el.append(jQuery("<option></option>")
+                                            .attr("value", value.id).text(value.name));
                                     });
                                     } else{
-                                    $el.append(jQuery("<opt                                                                                                                ion></option>")
-                                            .attr("value", '').text('Nu exista personal                                                                               disponibil'));
+                                    $el.append(jQuery("<option></option>")
+                                            .attr("value", '').text('Nu exista personal disponibil'));
                                     }
 
 
@@ -814,12 +826,12 @@ function appointment_calendar_shortcode() {
 
                         <select name="employee" id="employee">
                             <option value="0"><?php _e("Selecteaza angajatul", "appointzilla"); ?></option>
-    <?php foreach ($AllEmployees as $Employee) { ?>
+                            <?php foreach ($AllEmployees as $Employee) { ?>
                                 <option value="<?php echo $Employee->id ?>">
-                                <?php echo ucwords($Employee->name);
-                                ?>
+                                    <?php echo ucwords($Employee->name);
+                                    ?>
                                 </option>
-                                <?php } ?> </select>
+                            <?php } ?> </select>
                         <br>
                         <br>
                         <button name="next1" class="apcal_btn" type="button" id="next1" value="next1"><?php _e("Mai departe", "appointzilla"); ?> <i class="icon-arrow-right"></i></button>
@@ -835,7 +847,7 @@ function appointment_calendar_shortcode() {
         <div id="AppSecondModal">
             <div class="apcal_modal" id="myModal" style="z-index:99999;">
                 <form method="post" name="appointment-form2" id="appointment-form2" action="" onsubmit="return CheckValidation()">
-        <?php wp_nonce_field('appointment_register_nonce_check', 'appointment_register_nonce_field'); ?>
+                    <?php wp_nonce_field('appointment_register_nonce_check', 'appointment_register_nonce_field'); ?>
                     <div class="apcal_modal-info">
                         <div class="apcal_alert apcal_alert-info">
                             <a href="" style="float:right; margin-right:-4px;" id="close"><i class="icon-remove"></i></a>
@@ -847,94 +859,94 @@ function appointment_calendar_shortcode() {
                     <div class="apcal_modal-body">
                         <div id="timesloatbox" class="apcal_alert apcal_alert-block" style="float:left; height:auto; width:90%;">
                             <!---slots time calculation--->
-        <?php
-        // time-slots calculation
-        global $wpdb;
-        $ServiceId = intval($_GET["ServiceId"]);
-        $StaffId = intval($_GET["StaffId"]);
-        $ServiceTableName = $wpdb->prefix . "ap_services";
-        $ServiceData = $wpdb->get_row($wpdb->prepare("SELECT `name`, `duration` FROM `$ServiceTableName` WHERE `id` = %d", $ServiceId), OBJECT);
+                            <?php
+                            // time-slots calculation
+                            global $wpdb;
+                            $ServiceId = intval($_GET["ServiceId"]);
+                            $StaffId = intval($_GET["StaffId"]);
+                            $ServiceTableName = $wpdb->prefix . "ap_services";
+                            $ServiceData = $wpdb->get_row($wpdb->prepare("SELECT `name`, `duration` FROM `$ServiceTableName` WHERE `id` = %d", $ServiceId), OBJECT);
 
-        $ServiceDuration = $ServiceData->duration;
+                            $ServiceDuration = $ServiceData->duration;
 
-        $AppointmentDate = date("Y-m-d", strtotime($_GET['AppDate'])); //assign selected date by user
-        $AllCalendarSettings = unserialize(get_option('apcal_calendar_settings'));
-        $Biz_start_time = $AllCalendarSettings['day_start_time'];
-        $Biz_end_time = $AllCalendarSettings['day_end_time'];
-        if (isset($AllCalendarSettings['booking_time_slot'])) {
-            $UserDefineTimeSlot = $AllCalendarSettings['booking_time_slot'];
-        } else {
-            $UserDefineTimeSlot = $ServiceDuration;
-        }
-        $AllSlotTimesList = array();
-        $Enable = array();
-        $AppPreviousTimes = array();
-        $AppNextTimes = array();
-        $AppBetweenTimes = array();
-        $EventPreviousTimes = array();
-        $EventBetweenTimes = array();
-        $DisableSlotsTimes = array();
-        $BusinessEndCheck = array();
-        $AllSlotTimesList_User = array();
-        $TodaysAllDayEvent = 0;
+                            $AppointmentDate = date("Y-m-d", strtotime($_GET['AppDate'])); //assign selected date by user
+                            $AllCalendarSettings = unserialize(get_option('apcal_calendar_settings'));
+                            $Biz_start_time = $AllCalendarSettings['day_start_time'];
+                            $Biz_end_time = $AllCalendarSettings['day_end_time'];
+                            if (isset($AllCalendarSettings['booking_time_slot'])) {
+                                $UserDefineTimeSlot = $AllCalendarSettings['booking_time_slot'];
+                            } else {
+                                $UserDefineTimeSlot = $ServiceDuration;
+                            }
+                            $AllSlotTimesList = array();
+                            $Enable = array();
+                            $AppPreviousTimes = array();
+                            $AppNextTimes = array();
+                            $AppBetweenTimes = array();
+                            $EventPreviousTimes = array();
+                            $EventBetweenTimes = array();
+                            $DisableSlotsTimes = array();
+                            $BusinessEndCheck = array();
+                            $AllSlotTimesList_User = array();
+                            $TodaysAllDayEvent = 0;
 
-        $TimeOffTableName = $wpdb->prefix . "ap_events";
+                            $TimeOffTableName = $wpdb->prefix . "ap_events";
 
-        //if today is any all-day time-off then show msg no time available today
-        $TodaysAllDayEventData = $wpdb->get_results($wpdb->prepare("SELECT `start_time`, `end_time`, `repeat`, `start_date`, `end_date` FROM `$TimeOffTableName` WHERE date('$AppointmentDate') between `start_date` AND `end_date` AND `allday` = %s", '1'), OBJECT);
+                            //if today is any all-day time-off then show msg no time available today
+                            $TodaysAllDayEventData = $wpdb->get_results($wpdb->prepare("SELECT `start_time`, `end_time`, `repeat`, `start_date`, `end_date` FROM `$TimeOffTableName` WHERE date('$AppointmentDate') between `start_date` AND `end_date` AND `allday` = %s", '1'), OBJECT);
 
-        //check if appointment date in any recurring time-off date
-        foreach ($TodaysAllDayEventData as $SingleTimeOff) {
-            // none check
-            if ($SingleTimeOff->repeat == 'N') {
-                $TodaysAllDayEvent = 1;
-            }
+                            //check if appointment date in any recurring time-off date
+                            foreach ($TodaysAllDayEventData as $SingleTimeOff) {
+                                // none check
+                                if ($SingleTimeOff->repeat == 'N') {
+                                    $TodaysAllDayEvent = 1;
+                                }
 
-            // daily check
-            if ($SingleTimeOff->repeat == 'D') {
-                $TodaysAllDayEvent = 1;
-            }
+                                // daily check
+                                if ($SingleTimeOff->repeat == 'D') {
+                                    $TodaysAllDayEvent = 1;
+                                }
 
-            // weekly check
-            if ($SingleTimeOff->repeat == 'W') {
-                $EventStartDate = $SingleTimeOff->start_date;
-                $diff = ( strtotime($EventStartDate) - strtotime($AppointmentDate) ) / 60 / 60 / 24;
-                if (($diff % 7) == 0) {
-                    $TodaysAllDayEvent = 1;
-                }
-            }
+                                // weekly check
+                                if ($SingleTimeOff->repeat == 'W') {
+                                    $EventStartDate = $SingleTimeOff->start_date;
+                                    $diff = ( strtotime($EventStartDate) - strtotime($AppointmentDate) ) / 60 / 60 / 24;
+                                    if (($diff % 7) == 0) {
+                                        $TodaysAllDayEvent = 1;
+                                    }
+                                }
 
-            //bi-weekly check
-            if ($SingleTimeOff->repeat == 'BW') {
-                $EventStartDate = $SingleTimeOff->start_date;
-                $diff = ( strtotime($EventStartDate) - strtotime($AppointmentDate) ) / 60 / 60 / 24;
-                if (($diff % 14) == 0) {
-                    $TodaysAllDayEvent = 1;
-                }
-            }
+                                //bi-weekly check
+                                if ($SingleTimeOff->repeat == 'BW') {
+                                    $EventStartDate = $SingleTimeOff->start_date;
+                                    $diff = ( strtotime($EventStartDate) - strtotime($AppointmentDate) ) / 60 / 60 / 24;
+                                    if (($diff % 14) == 0) {
+                                        $TodaysAllDayEvent = 1;
+                                    }
+                                }
 
-            //monthly check
-            if ($SingleTimeOff->repeat == 'M') {
-                // calculate all monthly dates
-                $EventStartDate = $SingleTimeOff->start_date;
-                $EventEndDate = $SingleTimeOff->end_date;
-                $i = 0;
-                do {
-                    $NextDate = date("Y-m-d", strtotime("+$i months", strtotime($EventStartDate)));
-                    $AllEventMonthlyDates[] = $NextDate;
-                    $i = $i + 1;
-                } while (strtotime($EventEndDate) != strtotime($NextDate));
+                                //monthly check
+                                if ($SingleTimeOff->repeat == 'M') {
+                                    // calculate all monthly dates
+                                    $EventStartDate = $SingleTimeOff->start_date;
+                                    $EventEndDate = $SingleTimeOff->end_date;
+                                    $i = 0;
+                                    do {
+                                        $NextDate = date("Y-m-d", strtotime("+$i months", strtotime($EventStartDate)));
+                                        $AllEventMonthlyDates[] = $NextDate;
+                                        $i = $i + 1;
+                                    } while (strtotime($EventEndDate) != strtotime($NextDate));
 
-                //check appointment-date in $AllEventMonthlyDates
-                if (in_array($AppointmentDate, $AllEventMonthlyDates)) {
-                    $TodaysAllDayEvent = 1;
-                }
-            }
-        }//end of event fetching foreach
+                                    //check appointment-date in $AllEventMonthlyDates
+                                    if (in_array($AppointmentDate, $AllEventMonthlyDates)) {
+                                        $TodaysAllDayEvent = 1;
+                                    }
+                                }
+                            }//end of event fetching foreach
 
 
-        if ($TodaysAllDayEvent) {
-            ?>
+                            if ($TodaysAllDayEvent) {
+                                ?>
                                 <div class='apcal_alert apcal_alert-error'><?php _e("Sorry! No time available today.", "appointzilla"); ?></div>
                                 <a class="apcal_btn" id="back" onclick="return Backbutton()"><i class="icon-arrow-left"></i> <?php _e("Back", "appointzilla"); ?></a><?php
                             } else {
@@ -1180,24 +1192,24 @@ function appointment_calendar_shortcode() {
                                             <div style="width:90px; float:left; padding:1px; display:inline-block;">
                                                 <input name="start_time" id="start_time" type="radio" value="<?php echo $Single; ?>"/>&nbsp;<?php echo $Single; ?>
                                             </div><?php } else {
-                        ?>
+                                            ?>
                                             <!-- disable slots-->
                                             <div style="width:90px; float:left; padding:1px; display:inline-block;">
                                                 <input name="start_time" id="start_time"  disabled="disabled" type="radio"  value="<?php echo $Single; ?>"/>&nbsp;<del><?php echo $Single; ?></del>
                                             </div><?php
-                    }
-                }// end of enable isset
-            }// end foreach
-            unset($DisableSlotsTimes);
-        } // end else 
+                                        }
+                                    }// end of enable isset
+                                }// end foreach
+                                unset($DisableSlotsTimes);
+                            } // end else 
                             ?><br />
                             <div id="selecttimediv"><!--display select time error --></div>
                         </div>
 
-        <?php if (!$Enable && !$TodaysAllDayEvent) { ?>
+                        <?php if (!$Enable && !$TodaysAllDayEvent) { ?>
                             <p align=center class='apcal_alert apcal_alert-error' style='width:auto;'><strong><?php _e("Sorry! Today's all appointments has been booked.", "appointzilla"); ?></strong></p>
                             <a class="apcal_btn apcal_btn-primary" id="back" onclick="Backbutton()"><i class="icon-arrow-left"></i> <?php _e("Back", "appointzilla"); ?></a><?php } else if (!$TodaysAllDayEvent && $Enable) {
-            ?>
+                            ?>
                             <input type="hidden" name="serviceid" id="serviceid" value="<?php echo $_GET['ServiceId']; ?>" />
                             <input type="hidden" name="staffid" id="staffid" value="<?php echo $_GET['StaffId']; ?>" />
                             <input type="hidden" name="appointmentdate" id="appointmentdate"  value="<?php echo $_GET['AppDate']; ?>" />
@@ -1240,13 +1252,13 @@ function appointment_calendar_shortcode() {
                                     border-top: 0 solid #DDDDDD;
                                 }
                             </style><?php }
-            ?>
+                        ?>
                     </div>
                     <!--</div>-->
                 </form>
             </div>
         </div><?php
-        }// end of isset next1 servicId and AppDate
-    }
+    }// end of isset next1 servicId and AppDate
+}
 
 //end of short code function ?>
